@@ -11,12 +11,15 @@ public class RecipeActivity extends Activity {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.recipe);
-		
-		Intent intent = getIntent();
-		String s = intent.getStringExtra("recipe_name");
-		
-		TextView txtView = (TextView)findViewById(R.id.recipe_name);
-		
-		txtView.setText(s);
+
+		try {
+			Intent intent = getIntent();
+			String s = intent.getStringExtra("recipe_name");
+
+			TextView txtView = (TextView)findViewById(R.id.recipe_name);
+
+			txtView.setText(s);
+			
+		} catch(Exception e){};
 	}
 }

@@ -10,8 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView; 
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 	ListView listView ;
@@ -26,7 +24,9 @@ public class MainActivity extends ActionBarActivity {
         
         // Defined Array values to show in ListView
         String[] values = new String[] { "Recipe 1", 
-                                         "Recipe 2" 
+                                         "Recipe 2",
+                                         "Recipe 3", 
+                                         "Recipe 4"
                                         };
 
         // Define a new Adapter
@@ -50,12 +50,12 @@ public class MainActivity extends ActionBarActivity {
                  int position, long id) {
                 
                // ListView Clicked item index
-               int itemPosition     = position;
+               // int itemPosition     = position;
                
                // ListView Clicked item value
                String  itemValue    = (String) listView.getItemAtPosition(position);
                   
-               // Moving to the RecipeActivity
+               // Moving to the RecipeActivity and passing selected recipe name
                Intent intent = new Intent("com.example.recipesorganizer.RecipeActivity");
                intent.putExtra("recipe_name", itemValue);
                startActivity( intent );
@@ -67,32 +67,7 @@ public class MainActivity extends ActionBarActivity {
                 */
               }
 
-         }); 
-		/*
-		String[] recipes = {"Recipe 1", "Recipe 2"}; 
-
-		ListView lv = (ListView) findViewById(R.id.recipeList);
-		lv.setAdapter(new ArrayAdapter<String>(this, R.layout.recipe, R.id.recipe_name, recipes));
-
-		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-		//		 android.R.layout.simple_list_item_1, recipes);
-		
-		// setListAdapter(adapter);
-
-		// ListView actressList = getListView();
-
-		lv.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-				TextView clickedView = (TextView) view;
-				// String actress = (String) clickedView.getText();
-				Toast.makeText(getApplicationContext(), clickedView.getText() + " selected", Toast.LENGTH_LONG).show();
-
-			}
-		});
-		*/
+         });
 	}
 
 	@Override
@@ -108,7 +83,15 @@ public class MainActivity extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
+		/*
 		if (id == R.id.action_settings) {
+			return true;
+		}
+		*/
+		if (id == R.id.add_recipe) {
+			Intent intent = new Intent("com.example.recipesorganizer.ChooseAddOptionActivity");
+            intent.putExtra("recipe_name", "test");
+            startActivity( intent );
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
