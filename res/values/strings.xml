@@ -8,5 +8,9 @@
     <string name="choose_add_option">How whould you like to add a recipe?</string>
 	<string name="add_from_scratch">Add from Scratch</string>
 	<string name="add_from_internet">Add from the Internet</string>
+	<string name="action_discard">Delete</string>
+	<string name="action_edit">Edit</string>
+	<string name="action_new">Add</string>
+	
 
 </resources>

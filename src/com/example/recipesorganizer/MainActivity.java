@@ -5,6 +5,7 @@ import android.view.View;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -23,10 +24,10 @@ public class MainActivity extends ActionBarActivity {
         listView = (ListView) findViewById(R.id.recipeList);
         
         // Defined Array values to show in ListView
-        String[] values = new String[] { "Recipe 1", 
-                                         "Recipe 2",
-                                         "Recipe 3", 
-                                         "Recipe 4"
+        String[] values = new String[] { "Elbows and Ground Beef", 
+                                         "Chicken Parmesan",
+                                         "Singaporean Rice", 
+                                         "Fish and Chips"
                                         };
 
         // Define a new Adapter
@@ -72,9 +73,10 @@ public class MainActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+	    return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -88,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
 			return true;
 		}
 		*/
-		if (id == R.id.add_recipe) {
+		if (id == R.id.action_new) {
 			Intent intent = new Intent("com.example.recipesorganizer.ChooseAddOptionActivity");
             intent.putExtra("recipe_name", "test");
             startActivity( intent );
