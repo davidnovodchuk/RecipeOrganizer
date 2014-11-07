@@ -8,6 +8,8 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="21" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -25,24 +27,50 @@
         <activity
             android:name=".RecipeActivity"
             android:label="Elbows and Ground Beef" >
--
+-
             <intent-filter>
                 <action android:name="com.example.recipesorganizer.RecipeActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".ChooseAddOptionActivity"
             android:label="Choose Add Option" >
--
+-
             <intent-filter>
                 <action android:name="com.example.recipesorganizer.ChooseAddOptionActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <!-- Searching for recipes and presenting ListView of results -->
+        <activity
+            android:name=".RecipeSearchIntentServiceActivity"
+            android:label="Search for Recipes" >
+            <intent-filter>
+                <action android:name="com.example.recipesorganizer.RecipeSearchIntentServiceActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="com.example.recipesorganizer.RecipeSearchIntentService" />
+
+        <!-- Presenting Recipe search result on the screen using the API -->
+        <activity
+            android:name=".RecipeIntentServiceActivity"
+            android:label="Present Search Recipe Result" >
+            <intent-filter>
+                <action android:name="com.example.recipesorganizer.RecipeIntentServiceActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="com.example.recipesorganizer.RecipeIntentService" >
+        </service>
     </application>
 
 </manifest>

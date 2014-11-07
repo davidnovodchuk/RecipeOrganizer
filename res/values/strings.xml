@@ -12,5 +12,7 @@
 	<string name="action_edit">Edit</string>
 	<string name="action_new">Add</string>
 	
+	<string name="find_recipes">FIND RECIPES</string>
+	<string name="recipe_keywords">Recipe Keywords</string>
 
 </resources>

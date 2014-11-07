@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 public class ChooseAddOptionActivity extends Activity {
 
@@ -16,11 +15,11 @@ public class ChooseAddOptionActivity extends Activity {
 	
 	public void onClick1(View view) {
     	
-    	startActivity( new Intent("com.example.recipesorganizer.RecipeActivity") );
+    	startActivity( new Intent("com.example.recipesorganizer.RecipeSActivity") );
     }
 	
 	public void onClick2(View view) {
     	
-    	startActivity( new Intent("com.example.recipesorganizer.RecipeActivity") );
+    	startActivity( new Intent("com.example.recipesorganizer.RecipeSearchIntentServiceActivity") );
     }
 }
