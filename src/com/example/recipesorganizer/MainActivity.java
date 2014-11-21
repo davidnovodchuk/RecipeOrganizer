@@ -1,16 +1,16 @@
 package com.example.recipesorganizer;
 
 import android.support.v7.app.ActionBarActivity;
-import android.view.View; 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.AdapterView; 
-import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends ActionBarActivity {
 	ListView listView ;

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -20,6 +21,12 @@ public class RecipeIntentService extends IntentService {
 	private final String RECIPE_ID = "RecipeID";
 	private final String INSTRUCTIONS = "Instructions";
 	private final String RECIPE = "Recipe";
+	private final String NAME = "Name";
+	private final String INGREDIENT = "Ingredient";
+	private final String METRICDISPLAYQUANTITY = "MetricDisplayQuantity";
+	private final String METRICUNIT = "MetricUnit";
+	private final String INGREDIENTS = "Ingredients";
+	private final String IMAGEURL = "ImageURL";
 
 	public RecipeIntentService(){  // Note: zero argument
 		super( "Recipe IntentService" );
@@ -30,36 +37,43 @@ public class RecipeIntentService extends IntentService {
 
 		/* time-consuming operations/calculations */
 		String recipeId = "47725";
-		String result;
+		Recipe result = new Recipe();
 
 		recipeId = intent.getStringExtra( "recipeId" );
-		result = wordDefinition( recipeId );
+		result = organizedRecipe( recipeId );
+		ArrayList<String> recipeData = new ArrayList<String>();
+		
+		recipeData.add(result.title);
+		recipeData.add(result.imageURL);
+		recipeData.add(result.ingredients);
+		recipeData.add(result.instructions);
 
 		/* broadcast an implicit intent in order to report work status BACK TO an Activity */
 		Intent broadcastIntent = new Intent( "NUMBER_CRUNCHING_ACTION" );
 
 		// add data to the intent
-		broadcastIntent.putExtra( "com.example.recipeintentservice.answer", result );
+		broadcastIntent.putStringArrayListExtra( "com.example.recipeintentservice.answer", recipeData );
 
 		// broadcast the intent
 		getBaseContext().sendBroadcast( broadcastIntent ); // getBaseContext()???
 	}
 
 	// connect to  a Word Dictionary web service and retrieve the definition of a word
-	private String wordDefinition(String recipeId) {
+	private Recipe organizedRecipe(String recipeId) {
 
 		InputStream in = null;
-		
-		String result = "";
+
+		// String result = "";
+		Recipe recipe = new Recipe();
 
 		try {
 
 			// 1. HTTP processing: open an HTTP connection
 			in = OpenHttpConnection(
-					
+
 					"http://api.bigoven.com/recipe/" + recipeId + 
 					"?api_key=dvxdQoysC1Kx12c9e19yl5w5fuFz89KI"
-				);
+					);
 
 			// use an XmlPullParser
 			XmlPullParser parser = Xml.newPullParser();
@@ -87,13 +101,64 @@ public class RecipeIntentService extends IntentService {
 
 					} else if ( itemString != null ){   // false: skip the heading section
 
-						// getting the id of the recipe
-						if ( name.equalsIgnoreCase(TITLE) ){
-							result = parser.nextText() + "\n\n";
-						}
 						// getting the title of the recipe
+						if ( name.equalsIgnoreCase(TITLE) ){
+							// result = parser.nextText() + "\n\n";
+							recipe.title = parser.nextText();
+						}
+						// getting the image URL of the recipe
+						else if ( name.equalsIgnoreCase(IMAGEURL) ){
+							recipe.imageURL = parser.nextText();
+						}
+						// getting the instructions of the recipe
 						else if ( name.equalsIgnoreCase(INSTRUCTIONS) ){
-							result += "Instructions:\n" + parser.nextText();
+							// result += "\n\nInstructions:\n\n" + parser.nextText();
+							recipe.instructions = parser.nextText();
+						}
+						// checking if the parser in the "ingredients" area
+						else if ( name.equalsIgnoreCase(INGREDIENTS) ){
+							// result += "\nIngredients:\n\n";
+							recipe.ingredients = "";
+						}
+						// getting the ingredients of the recipe
+						else if ( name.equalsIgnoreCase(INGREDIENT) ){
+									
+							boolean completedIngredient = false;
+							String ingredientInfo = "";
+							while(!completedIngredient) {
+
+								switch (eventType){
+								case XmlPullParser.START_DOCUMENT:
+									break;
+								case XmlPullParser.START_TAG:
+									name = parser.getName();
+
+									// getting the name of the ingredient
+									if ( name.equalsIgnoreCase(NAME) ){
+										ingredientInfo += parser.nextText();
+									}
+									// getting the quantity of the ingredient
+									else if ( name.equalsIgnoreCase(METRICDISPLAYQUANTITY) ){
+										ingredientInfo += " - " + parser.nextText();
+									}
+									// getting the quantity of the ingredient
+									else if ( name.equalsIgnoreCase(METRICUNIT) ){
+										ingredientInfo += " " + parser.nextText();
+										completedIngredient = true;
+									}
+									break;
+								case XmlPullParser.END_TAG:
+									name = parser.getName();
+
+									if (name.equalsIgnoreCase(METRICUNIT)){
+										completedIngredient = true;
+									}
+									break;
+								}
+								eventType = parser.next();
+							}
+							// result += ingredientInfo + "\n";
+							recipe.ingredients += "\n" + ingredientInfo;
 						}
 					}
 					break;
@@ -110,8 +175,8 @@ public class RecipeIntentService extends IntentService {
 
 			} // end while
 		} catch( Exception ex ){ ex.printStackTrace(); }
-		
-		return result;
+
+		return recipe;
 	}
 
 	// open a HTTP connection

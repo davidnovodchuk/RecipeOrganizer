@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -51,15 +52,21 @@ public class RecipeIntentServiceActivity extends Activity {
 			@Override
 			public void onReceive(Context context, Intent intentBroadcast){
 
-				String result="aaa";
+				ArrayList<String> result = new ArrayList<String>();
 				try {
-					result = intentBroadcast.getStringExtra( 
+					result = intentBroadcast.getStringArrayListExtra( 
 							"com.example.recipeintentservice.answer"
 							);
 				}
 				catch(Exception ex){ ex.printStackTrace(); }
+				
+				Log.d("test", result.get(0));
 
-				textView.setText( result );
+				Recipe recipe = new Recipe(result.get(0),result.get(1),result.get(2),result.get(3));
+				String view = recipe.title + 
+							  "\n\nIngredients:\n" + recipe.ingredients + 
+							  "\n\nInstructions\n" + recipe.instructions;
+				textView.setText( view );
 			}
 		};
 	}
