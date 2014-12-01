@@ -2,6 +2,7 @@ package com.example.recipesorganizer;
 
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -16,7 +17,8 @@ public class RecipeActivity extends Activity {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		//setContentView(R.layout.recipe);
-
+		Intent intent = getIntent();
+		//int id = intent.getIntExtra(", defaultValue)
 	
 		
 		String recipeName = "Elbows and Ground Beef \n";
