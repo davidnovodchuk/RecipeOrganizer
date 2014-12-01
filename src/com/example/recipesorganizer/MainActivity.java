@@ -1,8 +1,10 @@
 package com.example.recipesorganizer;
 
-import android.support.v7.app.ActionBarActivity;
+
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,34 +13,38 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends ActionBarActivity {
 	ListView listView ;
+	private static final int ACTIVITY_CREATE=0;
+    private static final int ACTIVITY_EDIT=1;
 
+    private static final int INSERT_ID = Menu.FIRST;
+    private static final int DELETE_ID = Menu.FIRST + 1;
+    private DBAdapter mDbHelper;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		mDbHelper = new DBAdapter(this);
+        mDbHelper.open();
 
 		 // Get ListView object from xml
         listView = (ListView) findViewById(R.id.recipeList);
         
-        // Defined Array values to show in ListView
-        String[] values = new String[] { "Elbows and Ground Beef", 
-                                         "Chicken Parmesan",
-                                         "Singaporean Rice", 
-                                         "Fish and Chips"
-                                        };
-
-        // Define a new Adapter
-        // First parameter - Context
-        // Second parameter - Layout for the row
-        // Third parameter - ID of the TextView to which the data is written
-        // Forth - the Array of data
+        Cursor recipesCursor = mDbHelper.fetchAllNotes();
+        
+        String[] title = null;
+        if(recipesCursor.moveToFirst())
+        {
+        	do {
+        		title = new String[]{DBAdapter.KEY_TITLE};
+        	} while (recipesCursor.moveToLast());
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-          android.R.layout.simple_list_item_1, android.R.id.text1, values);
-
+                android.R.layout.simple_list_item_1, android.R.id.text1, title);
 
         // Assign adapter to ListView
         listView.setAdapter(adapter); 
@@ -58,19 +64,15 @@ public class MainActivity extends ActionBarActivity {
                   
                // Moving to the RecipeActivity and passing selected recipe name
                Intent intent = new Intent("com.example.recipesorganizer.RecipeActivity");
-               intent.putExtra("recipe_name", itemValue);
+               intent.putExtra(DBAdapter.KEY_ROWID, id);
                startActivity( intent );
-               /*
-                // Show Alert 
-                Toast.makeText(getApplicationContext(),
-                  "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
-                  .show();
-                */
+               
               }
 
          });
 	}
-
+	
+	 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    // Inflate the menu items for use in the action bar
