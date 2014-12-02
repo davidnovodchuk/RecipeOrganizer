@@ -158,7 +158,7 @@ public class RecipeIntentService extends IntentService {
 								eventType = parser.next();
 							}
 							// result += ingredientInfo + "\n";
-							recipe.ingredients += "\n" + ingredientInfo;
+							recipe.ingredients += ingredientInfo + "\n";
 						}
 					}
 					break;

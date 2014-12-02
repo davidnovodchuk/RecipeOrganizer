@@ -2,13 +2,14 @@ package com.example.recipesorganizer;
 
 import java.util.ArrayList;
 
-import android.os.Bundle;
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -62,7 +63,7 @@ public class RecipeSearchIntentServiceActivity extends ListActivity {
 				ListView lstView = getListView();
 
 				//lstView.setChoiceMode(ListView.CHOICE_MODE_NONE);   // normal list without choices
-				lstView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); // one choice
+				lstView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE); // one choice
 				//lstView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE); // many choices
 
 				lstView.setTextFilterEnabled(true); // filter the children according to user input
@@ -102,6 +103,7 @@ public class RecipeSearchIntentServiceActivity extends ListActivity {
 	 *    - fired when a ListView item is clicked (i.e. selected AND deselected) 
 	 * API: provided by the ListActivity class
 	 */
+	@Override
 	public void onListItemClick(
 			ListView parent, View v, int position, long id )
 	{
@@ -130,6 +132,7 @@ public class RecipeSearchIntentServiceActivity extends ListActivity {
 	}
 
 	/* unregister a broadcast receiver */
+	@Override
 	public void onPause(){
 		super.onPause();
 

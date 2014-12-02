@@ -14,5 +14,8 @@
 	
 	<string name="find_recipes">FIND RECIPES</string>
 	<string name="recipe_keywords">Recipe Keywords</string>
+	<string name="ingredients">Ingredients:</string>
+	<string name="instructions">Instructions:</string>
+	<string name="image_desc">image of the recipe</string>
 
 </resources>

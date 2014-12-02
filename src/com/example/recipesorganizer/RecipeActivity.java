@@ -1,6 +1,5 @@
 package com.example.recipesorganizer;
 
-import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -52,7 +51,7 @@ public class RecipeActivity extends Activity {
 		textview1.setTextSize(30);
 		textview1.setText(recipeName);
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-			    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 			params.gravity = Gravity.CENTER;
 		
 		image.setLayoutParams(params);	

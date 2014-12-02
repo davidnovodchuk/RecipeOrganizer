@@ -1,25 +1,38 @@
 package com.example.recipesorganizer;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RecipeIntentServiceActivity extends Activity {
 
 	private IntentFilter intentFilter;
 	private BroadcastReceiver intentReceiver;
+	
+	private Recipe recipe;
 
-	private TextView textView;
+	private TextView recipeName;
+	private ImageView recipeImage;
+	private TextView recipeIngredients;
+	private TextView recipeInstructions;
+	
+	// private TextView textView;
 	private String recipeId;
-	public static ArrayList<String> titles;
+	// public static ArrayList<String> titles;
 
 	// ids of recipes provided by the api
 	public static String[] ids;
@@ -27,11 +40,17 @@ public class RecipeIntentServiceActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_recipe_intent_service);
+		setContentView(R.layout.recipe);
 
-		textView = new TextView(this); 
+		recipeName = new TextView(this);
+		recipeIngredients = new TextView(this);
+		recipeInstructions = new TextView(this);
+		// textView = new TextView(this); 
 
-		textView = (TextView)findViewById(R.id.recipeTextView);
+		recipeName = (TextView)findViewById(R.id.recipe_name);
+		recipeImage = (ImageView) findViewById(R.id.recipe_image);
+		recipeIngredients = (TextView)findViewById(R.id.recipe_ingredients);
+		recipeInstructions = (TextView)findViewById(R.id.recipe_instructions);
 
 		Intent intent = getIntent();
 		recipeId = intent.getStringExtra( "recipeId" );
@@ -62,11 +81,16 @@ public class RecipeIntentServiceActivity extends Activity {
 				
 				Log.d("test", result.get(0));
 
-				Recipe recipe = new Recipe(result.get(0),result.get(1),result.get(2),result.get(3));
-				String view = recipe.title + 
-							  "\n\nIngredients:\n" + recipe.ingredients + 
-							  "\n\nInstructions\n" + recipe.instructions;
-				textView.setText( view );
+				recipe = new Recipe(result.get(0),result.get(1),result.get(2),result.get(3));
+				
+				recipeName.setText( recipe.title );
+
+				// show The Image
+				new DownloadImageTask((ImageView) findViewById(R.id.recipe_image))
+				            .execute(recipe.imageURL);
+				
+				recipeIngredients.setText( recipe.ingredients );
+				recipeInstructions.setText( recipe.instructions );
 			}
 		};
 	}
@@ -90,10 +114,35 @@ public class RecipeIntentServiceActivity extends Activity {
 	}
 
 	/* unregister a broadcast receiver */
+	@Override
 	public void onPause(){
 		super.onPause();
 
 		unregisterReceiver( intentReceiver );
 	}
 
+	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+	    ImageView bmImage;
+
+	    public DownloadImageTask(ImageView bmImage) {
+	        this.bmImage = bmImage;
+	    }
+
+	    protected Bitmap doInBackground(String... urls) {
+	        String urldisplay = urls[0];
+	        Bitmap mIcon11 = null;
+	        try {
+	            InputStream in = new java.net.URL(urldisplay).openStream();
+	            mIcon11 = BitmapFactory.decodeStream(in);
+	        } catch (Exception e) {
+	            Log.e("Error", e.getMessage());
+	            e.printStackTrace();
+	        }
+	        return mIcon11;
+	    }
+
+	    protected void onPostExecute(Bitmap result) {
+	        bmImage.setImageBitmap(result);
+	    }
+	}
 }
