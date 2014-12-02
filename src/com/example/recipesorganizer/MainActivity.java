@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -75,7 +76,10 @@ public class MainActivity extends ActionBarActivity {
 			});
 		}
 		else {
+<<<<<<< HEAD
 			// presenting message when there are no recipes in the database
+=======
+>>>>>>> 33e068ec5961f434ce9b16d5ee7a1f7218d7fff0
 			
 			RelativeLayout rr = new RelativeLayout(this);
 			TextView tv = new TextView(this);
