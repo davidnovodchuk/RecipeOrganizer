@@ -21,19 +21,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RecipeIntentServiceActivity extends ActionBarActivity {
-	
+
 	private DBAdapter mDbHelper;
 	private Long mRowId;
 	private IntentFilter intentFilter;
 	private BroadcastReceiver intentReceiver;
-	
+
 	private Recipe recipe;
 
 	private TextView recipeName;
 	private ImageView recipeImage;
 	private TextView recipeIngredients;
 	private TextView recipeInstructions;
-	
+
 	// private TextView textView;
 	private String recipeId;
 	// public static ArrayList<String> titles;
@@ -46,7 +46,7 @@ public class RecipeIntentServiceActivity extends ActionBarActivity {
 		setContentView(R.layout.recipe);
 
 		mDbHelper = new DBAdapter(this);
-        mDbHelper.open();
+		mDbHelper.open();
 		recipeName = new TextView(this);
 		recipeIngredients = new TextView(this);
 		recipeInstructions = new TextView(this);
@@ -83,17 +83,17 @@ public class RecipeIntentServiceActivity extends ActionBarActivity {
 							);
 				}
 				catch(Exception ex){ ex.printStackTrace(); }
-				
+
 				Log.d("test", result.get(0));
 
 				recipe = new Recipe(result.get(0),result.get(1),result.get(2),result.get(3));
-				
+
 				recipeName.setText( recipe.title );
 
 				// show The Image
-				new DownloadImageTask((ImageView) findViewById(R.id.recipe_image))
-				            .execute(recipe.imageURL);
-				
+				new DownloadImageTask( recipeImage )
+				.execute(recipe.imageURL);
+
 				recipeIngredients.setText( recipe.ingredients );
 				recipeInstructions.setText( recipe.instructions );
 			}
@@ -102,12 +102,12 @@ public class RecipeIntentServiceActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    // Inflate the menu items for use in the action bar
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.saverecipe, menu);
-	    return super.onCreateOptionsMenu(menu);
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.saverecipe, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -126,13 +126,13 @@ public class RecipeIntentServiceActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	private void saveState() {
-        
-        long id = mDbHelper.createRecipe(recipe.title, recipe.imageURL, recipe.ingredients, recipe.instructions);
-         if (id > 0) 
-             mRowId = id;
-     
-         
- }
+
+		long id = mDbHelper.createRecipe(recipe.title, recipe.imageURL, recipe.ingredients, recipe.instructions);
+		if (id > 0) 
+			mRowId = id;
+
+
+	}
 
 	/* register a broadcast receiver */
 	@Override
@@ -156,27 +156,27 @@ public class RecipeIntentServiceActivity extends ActionBarActivity {
 	}
 
 	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-	    ImageView bmImage;
+		ImageView bmImage;
 
-	    public DownloadImageTask(ImageView bmImage) {
-	        this.bmImage = bmImage;
-	    }
+		public DownloadImageTask(ImageView bmImage) {
+			this.bmImage = bmImage;
+		}
 
-	    protected Bitmap doInBackground(String... urls) {
-	        String urldisplay = urls[0];
-	        Bitmap mIcon11 = null;
-	        try {
-	            InputStream in = new java.net.URL(urldisplay).openStream();
-	            mIcon11 = BitmapFactory.decodeStream(in);
-	        } catch (Exception e) {
-	            Log.e("Error", e.getMessage());
-	            e.printStackTrace();
-	        }
-	        return mIcon11;
-	    }
+		protected Bitmap doInBackground(String... urls) {
+			String urldisplay = urls[0];
+			Bitmap mIcon11 = null;
+			try {
+				InputStream in = new java.net.URL(urldisplay).openStream();
+				mIcon11 = BitmapFactory.decodeStream(in);
+			} catch (Exception e) {
+				Log.e("Error", e.getMessage());
+				e.printStackTrace();
+			}
+			return mIcon11;
+		}
 
-	    protected void onPostExecute(Bitmap result) {
-	        bmImage.setImageBitmap(result);
-	    }
+		protected void onPostExecute(Bitmap result) {
+			bmImage.setImageBitmap(result);
+		}
 	}
 }
