@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Recipes Organizer</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_recipe">Add Recipe</string>
+    <string name="choose_add_option">How whould you like to add a recipe?</string>
+	<string name="add_from_scratch">Add from Scratch</string>
+	<string name="add_from_internet">Add from the Internet</string>
+	<string name="action_discard">Delete</string>
+	<string name="action_edit">Edit</string>
+	<string name="action_new">Add</string>
+	<string name="action_save">Save</string>
+	<string name="find_recipes">FIND RECIPES</string>
+	<string name="recipe_keywords">Recipe Keywords</string>
+	<string name="ingredients">Ingredients:</string>
+	<string name="instructions">Instructions:</string>
+	<string name="image_desc">image of the recipe</string>
+	<string name="title_activity_dbadapter">DB Adapter</string>
+
+</resources>
