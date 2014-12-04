@@ -70,6 +70,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".AddRecipeFromScratchActivity"
+            android:label="Add Recipe From Scratch" >
+            <intent-filter>
+                <action android:name="com.example.recipesorganizer.AddRecipeFromScratchActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <service android:name="com.example.recipesorganizer.RecipeIntentService" >
         </service>

@@ -16,7 +16,11 @@
 	<string name="recipe_keywords">Recipe Keywords</string>
 	<string name="ingredients">Ingredients:</string>
 	<string name="instructions">Instructions:</string>
+	
 	<string name="image_desc">image of the recipe</string>
+	<string name="recipe_name_hint">Enter Recipe Name</string>
+	<string name="ingredients_hint">Enter Ingredients</string>
+	<string name="instructions_hint">Enter Preparation Instructions</string>
 	<string name="title_activity_dbadapter">DB Adapter</string>
 
 </resources>

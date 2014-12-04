@@ -15,7 +15,7 @@ public class ChooseAddOptionActivity extends Activity {
 	
 	public void onClick1(View view) {
     	
-    	startActivity( new Intent("com.example.recipesorganizer.RecipeSActivity") );
+    	startActivity( new Intent("com.example.recipesorganizer.AddRecipeFromScratchActivity") );
     }
 	
 	public void onClick2(View view) {
