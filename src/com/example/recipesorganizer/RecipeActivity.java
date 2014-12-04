@@ -1,83 +1,132 @@
 package com.example.recipesorganizer;
 
-import android.app.Activity;
+import java.io.InputStream;
+import java.util.ArrayList;
+
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class RecipeActivity extends Activity {
+public class RecipeActivity extends ActionBarActivity {
+	private Recipe recipe;
+	private TextView recipeName;
+	private TextView recipeIngredients;
+	private TextView recipeInstructions;
+	private DBAdapter mDbHelper;
+	private Long mRowId;
 
 	@Override
-	public void onCreate(Bundle bundle) {
-		super.onCreate(bundle);
-		//setContentView(R.layout.recipe);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.recipe);
+		
+		mDbHelper = new DBAdapter(this);
+        mDbHelper.open();
+        
+        /*mRowId = (savedInstanceState == null) ? null :
+            (Long) savedInstanceState.getSerializable(DBAdapter.KEY_ROWID);
+		if (mRowId == null) {
+			Bundle extras = getIntent().getExtras();
+			mRowId = extras != null ? extras.getLong(DBAdapter.KEY_ROWID)
+									: null;
+		}*/
+	
 		Intent intent = getIntent();
-		//int id = intent.getIntExtra(", defaultValue)
-	
+		/*Bundle bundle = intent.getBundleExtra("recipe");
+		recipe = new Recipe(bundle.getString("title"), bundle.getString("image"), bundle.getString("ingredients"), bundle.getString("instructions"));*/
+		ArrayList<String> result = new ArrayList<String>();
+		result = intent.getStringArrayListExtra("recipe");
+		recipe = new Recipe(result.get(0),result.get(1),result.get(2),result.get(3));
 		
-		String recipeName = "Elbows and Ground Beef \n";
+		recipeName = (TextView)findViewById(R.id.recipe_name);
+		recipeIngredients = (TextView)findViewById(R.id.recipe_ingredients);
+		recipeInstructions = (TextView)findViewById(R.id.recipe_instructions);
 		
-		//LinearLayout linear = (LinearLayout)findViewById(R.id.my_linear_layout);
-		LinearLayout linear = new LinearLayout(this);
-		linear.setOrientation(LinearLayout.VERTICAL);
-
-		//TextView textView = (TextView)findViewById(R.id.recipe_name);
-		//TextView textView_ingredients = (TextView)findViewById(R.id.recipe_ingredients);
-		//TextView textView_method = (TextView)findViewById(R.id.recipe_method);
+		recipeName.setText(recipe.title);
+		recipeIngredients.setText(recipe.ingredients);
+		recipeInstructions.setText(recipe.instructions);
+		new DownloadImageTask((ImageView) findViewById(R.id.recipe_image))
+        .execute(recipe.imageURL);
 		
-		TextView textview1 = new TextView(this);
-		TextView textview2 = new TextView(this);
-		TextView textview3 = new TextView(this);
-		ImageView image = new ImageView(this);
-		
-		
-		String ingredients = "\n" +"\u2022 1 1/2 pounds lean ground beef \n" +
-				"\u2022 1 green bell pepper, chopped \n" +
-				"\u2022 1 onion, chopped \n" +
-				"\u2022 2 (29 ounce) cans tomato sauce \n" +
-				"\u2022 1 (16 ounce) package macaroni \n";
-		
-		
-		
-		String method = "1. Cook pasta according to package directions. Drain. \n" +
-				"2. In a Dutch oven, brown ground beef over medium heat. Add chopped onion, and cook until onion is soft. Add green pepper and tomato sauce; cook until pepper is soft. \n" +
-				"3. Serve sauce over pasta.";
-		
-		textview1.setTextSize(30);
-		textview1.setText(recipeName);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-			    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-			params.gravity = Gravity.CENTER;
-		
-		image.setLayoutParams(params);	
-		image.setImageResource(R.drawable.recipe);
-		
-		textview2.setTextSize(15);
-		textview2.setText(ingredients);
-		
-		textview3.setTextSize(15);
-		textview3.setText(method);
-		
-		linear.addView(textview1);
-		linear.addView(image);
-		linear.addView(textview2);
-		linear.addView(textview3);
-	
-		
-		setContentView(linear);
-	
 	}
+	
+	
+	private void saveState() {
+        
+           long id = mDbHelper.createRecipe(recipe.title, recipe.imageURL, recipe.ingredients, recipe.instructions);
+            if (id > 0) 
+                mRowId = id;
+        
+            
+    }
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    // Inflate the menu items for use in the action bar
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.recipecontent, menu);
+	    inflater.inflate(R.menu.saverecipe, menu);
 	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		/*
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		 */
+		if (id == R.id.action_save) {
+			saveState();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+	    ImageView bmImage;
+
+	    public DownloadImageTask(ImageView bmImage) {
+	        this.bmImage = bmImage;
+	    }
+
+	    protected Bitmap doInBackground(String... urls) {
+	        String urldisplay = urls[0];
+	        Bitmap mIcon11 = null;
+	        try {
+	            InputStream in = new java.net.URL(urldisplay).openStream();
+	            mIcon11 = BitmapFactory.decodeStream(in);
+	        } catch (Exception e) {
+	            Log.e("Error", e.getMessage());
+	            e.printStackTrace();
+	        }
+	        return mIcon11;
+	    }
+
+	    protected void onPostExecute(Bitmap result) {
+	        bmImage.setImageBitmap(result);
+	    }
+	}
+	
+	public void getRecipe(Cursor c)
+	{
+		recipe.title = c.getString(1);
+		recipe.imageURL = c.getString(2);
+		recipe.ingredients = c.getString(3);
+		recipe.instructions = c.getString(4);
+		
 	}
 }

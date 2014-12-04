@@ -50,7 +50,7 @@ public class DBAdapter {
      */
     private static final String DATABASE_CREATE =
         "create table recipes (_id integer primary key autoincrement, "
-        + "title text not null, imageURL text not null, ingredients text not null, instructions text not null);";
+        + "title text not null, imageURL text, ingredients text, instructions text not null);";
 
     private static final String DATABASE_NAME = "data";
     private static final String DATABASE_TABLE = "recipes";
@@ -66,7 +66,7 @@ public class DBAdapter {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-
+        	
             db.execSQL(DATABASE_CREATE);
         }
 
@@ -118,7 +118,7 @@ public class DBAdapter {
      * @param body the body of the note
      * @return rowId or -1 if failed
      */
-    public long createNote(String title, String imageURL, String ingredients, String instructions ) {
+    public long createRecipe(String title, String imageURL, String ingredients, String instructions ) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_TITLE, title);
         initialValues.put(KEY_IMAGE, imageURL);
@@ -134,9 +134,18 @@ public class DBAdapter {
      * @param rowId id of note to delete
      * @return true if deleted, false otherwise
      */
-    public boolean deleteNote(long rowId) {
+    public boolean deleteRecipe(long rowId) {
 
         return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    public Cursor fetchColumn()
+    {
+    	Cursor mCursor = mDb.query(DATABASE_TABLE, new String [] {KEY_TITLE}, null, null, null, null, null);
+    	if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
     }
 
     /**
@@ -144,10 +153,11 @@ public class DBAdapter {
      * 
      * @return Cursor over all notes
      */
-    public Cursor fetchAllNotes() {
+    public Cursor fetchAllRecipes() {
 
         return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TITLE, KEY_IMAGE,
                 KEY_INGREDIENTS, KEY_INSTRUCTIONS}, null, null, null, null, null);
+        
     }
 
     /**
@@ -157,7 +167,7 @@ public class DBAdapter {
      * @return Cursor positioned to matching note, if found
      * @throws SQLException if note could not be found/retrieved
      */
-    public Cursor fetchNote(long rowId) throws SQLException {
+    public Cursor fetchRecipe(long rowId) throws SQLException {
 
         Cursor mCursor =
 
@@ -181,7 +191,7 @@ public class DBAdapter {
      * @param body value to set note body to
      * @return true if the note was successfully updated, false otherwise
      */
-    public boolean updateNote(long rowId, String title, String imageURL, String ingredients, String instructions ) {
+    public boolean updateRecipe(long rowId, String title, String imageURL, String ingredients, String instructions ) {
         ContentValues args = new ContentValues();
         args.put(KEY_TITLE, title);
         args.put(KEY_IMAGE, imageURL);

@@ -1,10 +1,8 @@
 package com.example.recipesorganizer;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,13 +11,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class RecipeIntentServiceActivity extends Activity {
-
+public class RecipeIntentServiceActivity extends ActionBarActivity {
+	
+	private DBAdapter mDbHelper;
+	private Long mRowId;
 	private IntentFilter intentFilter;
 	private BroadcastReceiver intentReceiver;
 	
@@ -35,13 +39,14 @@ public class RecipeIntentServiceActivity extends Activity {
 	// public static ArrayList<String> titles;
 
 	// ids of recipes provided by the api
-	public static String[] ids;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recipe);
 
+		mDbHelper = new DBAdapter(this);
+        mDbHelper.open();
 		recipeName = new TextView(this);
 		recipeIngredients = new TextView(this);
 		recipeInstructions = new TextView(this);
@@ -95,10 +100,39 @@ public class RecipeIntentServiceActivity extends Activity {
 		};
 	}
 
-	public void clickGet(View view){
-
-
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.saverecipe, menu);
+	    return super.onCreateOptionsMenu(menu);
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		/*
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		 */
+		if (id == R.id.action_save) {
+			saveState();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	private void saveState() {
+        
+        long id = mDbHelper.createRecipe(recipe.title, recipe.imageURL, recipe.ingredients, recipe.instructions);
+         if (id > 0) 
+             mRowId = id;
+     
+         
+ }
 
 	/* register a broadcast receiver */
 	@Override

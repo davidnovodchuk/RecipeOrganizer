@@ -27,7 +27,8 @@
         <activity
             android:name=".RecipeActivity"
             android:label="Elbows and Ground Beef" >
--
+-
+
             <intent-filter>
                 <action android:name="com.example.recipesorganizer.RecipeActivity" />
 
@@ -37,7 +38,8 @@
         <activity
             android:name=".ChooseAddOptionActivity"
             android:label="Choose Add Option" >
--
+-
+
             <intent-filter>
                 <action android:name="com.example.recipesorganizer.ChooseAddOptionActivity" />
 

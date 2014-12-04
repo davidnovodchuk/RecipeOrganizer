@@ -1,9 +1,17 @@
 package com.example.recipesorganizer;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -24,24 +32,29 @@ public class MainActivity extends ActionBarActivity {
 
 	private static final int INSERT_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
-	private DBAdapter mDbHelper;
+	private static DBAdapter mDbHelper;
+	private static Recipe recipe;
+	private Cursor recipesCursor;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mDbHelper = new DBAdapter(this);
 		mDbHelper.open();
-
+		recipe = new Recipe();
+		Log.d("debug", "i dont know");
 		// Get ListView object from xml
 		listView = (ListView) findViewById(R.id.recipeList);
 
-		Cursor recipesCursor = mDbHelper.fetchAllNotes();
+		getDatabase();
+		recipesCursor = mDbHelper.fetchColumn();
 
 		String[] title = null;
 		if(recipesCursor.moveToFirst())
 		{
 			do {
-				title = new String[]{DBAdapter.KEY_TITLE};
+				title = new String[]{recipesCursor.getString(0)};
 			} while (recipesCursor.moveToLast());
 		}
 
@@ -68,7 +81,16 @@ public class MainActivity extends ActionBarActivity {
 
 					// Moving to the RecipeActivity and passing selected recipe name
 					Intent intent = new Intent("com.example.recipesorganizer.RecipeActivity");
-					intent.putExtra(DBAdapter.KEY_ROWID, id);
+					recipesCursor = mDbHelper.fetchRecipe(id);
+					getRecipe(recipesCursor);
+					Bundle bundle = new Bundle();
+		        	bundle.putString("title", recipe.title);
+		        	bundle.putString("image", recipe.imageURL);
+		        	bundle.putString("ingredients", recipe.ingredients);
+		        	bundle.putString("instructions", recipe.instructions);
+				
+		        	intent.putExtra("recipe", bundle);
+			
 					startActivity( intent );
 
 				}
@@ -76,10 +98,8 @@ public class MainActivity extends ActionBarActivity {
 			});
 		}
 		else {
-<<<<<<< HEAD
+
 			// presenting message when there are no recipes in the database
-=======
->>>>>>> 33e068ec5961f434ce9b16d5ee7a1f7218d7fff0
 			
 			RelativeLayout rr = new RelativeLayout(this);
 			TextView tv = new TextView(this);
@@ -90,7 +110,59 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
+	public void getRecipe(Cursor c)
+	{
+		recipe.title = c.getString(1);
+		recipe.imageURL = c.getString(2);
+		recipe.ingredients = c.getString(3);
+		recipe.instructions = c.getString(4);
+		
+	}
+	
+	public void getDatabase()
+	{
+		try {
+			Log.d("debug", "inside database");
+            String destPath = "/data/data/" + getPackageName() +
+                              "/databases";
+            
+            File f = new File( destPath );
+            
+            if ( !f.exists() ) {  
+            	
+            	Log.i( "Database", "create directory: /databases/" );
+            	
+            	f.mkdirs();
+                f.createNewFile();
+            	
+            	// copy the database from the assets folder (/assets) into 
+            	// the databases folder on the device (/data/data/<package name>/databases)
+                // - database file name at /assets: mydb
+                
+                copyDB( getBaseContext().getAssets().open( "mydb" ),
+                        new FileOutputStream( destPath + "/MyDB" ) ); // Watch out: UPPERCASE LETTERS
+            }
+        } catch (FileNotFoundException e) {
+                 e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+	}
+
+	private void copyDB( InputStream inputStream, OutputStream outputStream ) throws IOException {
+//---copy 1K bytes at a time---
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = inputStream.read(buffer)) > 0) {
+			outputStream.write(buffer, 0, length);
+		}
+		inputStream.close();
+		outputStream.close();
+
+		Log.i( "Database", "copying done" );
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu items for use in the action bar
