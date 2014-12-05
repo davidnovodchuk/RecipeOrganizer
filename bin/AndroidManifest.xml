@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="14"
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,7 +26,7 @@
         </activity>
         <activity
             android:name=".RecipeActivity"
-            android:label="Elbows and Ground Beef" >
+            android:label="Recipe View" >
 -
 
             <intent-filter>
@@ -63,7 +63,7 @@
         <!-- Presenting Recipe search result on the screen using the API -->
         <activity
             android:name=".RecipeIntentServiceActivity"
-            android:label="Present Search Recipe Result" >
+            android:label="Search Recipe Result" >
             <intent-filter>
                 <action android:name="com.example.recipesorganizer.RecipeIntentServiceActivity" />
 
@@ -73,7 +73,7 @@
         
         <activity
             android:name=".AddRecipeFromScratchActivity"
-            android:label="Add Recipe From Scratch" >
+            android:label="Add From Scratch" >
             <intent-filter>
                 <action android:name="com.example.recipesorganizer.AddRecipeFromScratchActivity" />
 

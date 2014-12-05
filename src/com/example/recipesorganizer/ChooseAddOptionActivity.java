@@ -1,11 +1,11 @@
 package com.example.recipesorganizer;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
-public class ChooseAddOptionActivity extends Activity {
+public class ChooseAddOptionActivity extends ActionBarActivity {
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {

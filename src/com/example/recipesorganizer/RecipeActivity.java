@@ -2,6 +2,9 @@ package com.example.recipesorganizer;
 
 import java.io.InputStream;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -24,11 +27,15 @@ public class RecipeActivity extends ActionBarActivity {
 	private DBAdapter mDbHelper;
 	private int mRowId;
 	private Bundle bundle;
+	// currentActivity is used in the remove recipe dialog
+	private Activity currentActivity;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recipe);
+		
+		currentActivity = this;
 		
 		mDbHelper = new DBAdapter(this);
         mDbHelper.open();
@@ -89,9 +96,22 @@ public class RecipeActivity extends ActionBarActivity {
 		}
 		
 		if (id == R.id.action_discard) {
-			mDbHelper.deleteRecipe(mRowId);
-			Intent intent = new Intent(this, MainActivity.class);
-			startActivity(intent);
+			// confirmation that user wants to delete recipe:
+			// http://stackoverflow.com/questions/19286135/android-alert-dialog-and-set-positive-button
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		    builder.setTitle("Deletion Confirmation");
+		    builder.setMessage("Are you sure you want to delete the " + recipe.title + " recipe?");
+		    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int id) {
+
+					mDbHelper.deleteRecipe(mRowId);
+					Intent intent = new Intent(currentActivity, MainActivity.class);
+					startActivity(intent);
+		         }
+		    });
+		    builder.setNegativeButton("Cancel", null);
+		    builder.show();
 		}
 		
 		return super.onOptionsItemSelected(item);

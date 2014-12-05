@@ -16,14 +16,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RecipeIntentServiceActivity extends ActionBarActivity {
 
 	private DBAdapter mDbHelper;
-	private Long mRowId;
+	// private Long mRowId;
 	private IntentFilter intentFilter;
 	private BroadcastReceiver intentReceiver;
 
@@ -121,17 +121,22 @@ public class RecipeIntentServiceActivity extends ActionBarActivity {
 		 */
 		if (id == R.id.action_save) {
 			saveState();
+			Toast.makeText(getApplicationContext(), "Recipe Was Saved", 
+					   Toast.LENGTH_SHORT).show();
+			// Moving to the MainActivity
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity( intent );
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	private void saveState() {
 
-		long id = mDbHelper.createRecipe(recipe.title, recipe.imageURL, recipe.ingredients, recipe.instructions);
+		mDbHelper.createRecipe(recipe.title, recipe.imageURL, recipe.ingredients, recipe.instructions);
+		/*
 		if (id > 0) 
 			mRowId = id;
-
-
+		*/
 	}
 
 	/* register a broadcast receiver */

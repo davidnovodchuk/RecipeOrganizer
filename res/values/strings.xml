@@ -22,5 +22,8 @@
 	<string name="ingredients_hint">Enter Ingredients</string>
 	<string name="instructions_hint">Enter Preparation Instructions</string>
 	<string name="title_activity_dbadapter">DB Adapter</string>
+	<string name="yes">Yes</string>
+	<string name="cancel">Cancel</string>
+	<string name="searchMyRecipes">Search in Your Recipes</string>
 
 </resources>

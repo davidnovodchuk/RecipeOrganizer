@@ -1,5 +1,8 @@
 package com.example.recipesorganizer;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -7,8 +10,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class AddRecipeFromScratchActivity extends ActionBarActivity {
+	
+	// currentActivity is used in a dialog to open a new activity
+	Activity currentActivity;
 
 	private DBAdapter mDbHelper;
 	
@@ -23,6 +30,8 @@ public class AddRecipeFromScratchActivity extends ActionBarActivity {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_add_from_scratch);
+		
+		currentActivity = this;
 		
 		mDbHelper = new DBAdapter(this);
 		mDbHelper.open();
@@ -74,29 +83,30 @@ public class AddRecipeFromScratchActivity extends ActionBarActivity {
 		if (id == R.id.action_save) {
 			if( isAddMode ) {
 				saveState();
-				// Moving to the RecipeActivity and passing selected recipe name
+				Toast.makeText(getApplicationContext(), "Recipe Was Saved", 
+						   Toast.LENGTH_SHORT).show();
+				// Moving to the MainActivity
 				Intent intent = new Intent(this, MainActivity.class);
 				startActivity( intent );
 			} else {
-				updateState();
-				
-				String title =((EditText) findViewById(R.id.recipe_name)).getText().toString();
-				String ingredients =((EditText) findViewById(R.id.recipe_ingredients)).getText().toString();
-				String instructions =((EditText) findViewById(R.id.recipe_instructions)).getText().toString();
-				
-				// Moving to the RecipeActivity and passing selected recipe name
-				Intent intent = new Intent("com.example.recipesorganizer.RecipeActivity");
-				
-				Bundle bundle = new Bundle();
-				bundle.putString("rowId", mRowId);
-				bundle.putString("title", title);
-				bundle.putString("image", recipe.imageURL);
-				bundle.putString("ingredients", ingredients);
-				bundle.putString("instructions", instructions);
-				
-				intent.putExtra("recipe", bundle);
-				
-				startActivity( intent );
+				// confirmation that user wants to update recipe details:
+				// http://stackoverflow.com/questions/19286135/android-alert-dialog-and-set-positive-button
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+			    builder.setTitle("Edit Confirmation");
+			    builder.setMessage("Are you sure you want to change recipe information?");
+			    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int id) {
+			        	updateState();
+						Toast.makeText(getApplicationContext(), "Recipe Was Updated", 
+								   Toast.LENGTH_SHORT).show();
+						
+						Intent intent = new Intent(currentActivity, MainActivity.class);
+						startActivity( intent );
+			         }
+			    });
+			    builder.setNegativeButton("Cancel", null);
+			    builder.show();
 			}
 			return true;
 		}
