@@ -147,6 +147,15 @@ public class DBAdapter {
         }
         return mCursor;
     }
+    
+    public Cursor fetchIdsColumn()
+    {
+    	Cursor mCursor = mDb.query(DATABASE_TABLE, new String [] {KEY_ROWID}, null, null, null, null, null);
+    	if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
 
     /**
      * Return a Cursor over the list of all notes in the database
@@ -167,7 +176,7 @@ public class DBAdapter {
      * @return Cursor positioned to matching note, if found
      * @throws SQLException if note could not be found/retrieved
      */
-    public Cursor fetchRecipe(long rowId) throws SQLException {
+    public Cursor fetchRecipe(String rowId) throws SQLException {
 
         Cursor mCursor =
 

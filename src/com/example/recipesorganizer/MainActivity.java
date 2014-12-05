@@ -37,13 +37,18 @@ public class MainActivity extends ActionBarActivity {
 	private static DBAdapter mDbHelper;
 	private static Recipe recipe;
 	private Cursor recipesCursor;
+	private Cursor idsCursor;
+
+	static ArrayList<String> ids = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 		mDbHelper = new DBAdapter(this);
 		mDbHelper.open();
+		
 		recipe = new Recipe();
 		Log.d("debug", "i dont know");
 		// Get ListView object from xml
@@ -51,20 +56,19 @@ public class MainActivity extends ActionBarActivity {
 
 		getDatabase();
 		recipesCursor = mDbHelper.fetchColumn();
+		idsCursor = mDbHelper.fetchIdsColumn();
 
 		ArrayList<String> titles = null;
 
 		if(recipesCursor.moveToFirst())
 		{
 			titles = new ArrayList<String>();
-			/*
-			do {
-				title = new String[]{recipesCursor.getString(0)};
-			} while (recipesCursor.moveToLast());
-			 */
+			ids = new ArrayList<String>();
 
 			while (recipesCursor.moveToNext()) {
 				titles.add(recipesCursor.getString(0));
+				idsCursor.moveToNext();
+				ids.add(idsCursor.getString(0));
 			}
 		}
 		if( titles != null ) {
@@ -90,16 +94,17 @@ public class MainActivity extends ActionBarActivity {
 					
 					// Moving to the RecipeActivity and passing selected recipe name
 					Intent intent = new Intent("com.example.recipesorganizer.RecipeActivity");
-					recipesCursor = mDbHelper.fetchRecipe(id);
+					
+					recipesCursor = mDbHelper.fetchRecipe(ids.get(position));
 					getRecipe(recipesCursor);
 					Bundle bundle = new Bundle();
 					bundle.putString("title", recipe.title);
 					bundle.putString("image", recipe.imageURL);
 					bundle.putString("ingredients", recipe.ingredients);
 					bundle.putString("instructions", recipe.instructions);
-
+					
 					intent.putExtra("recipe", bundle);
-
+					
 					startActivity( intent );
 
 				}

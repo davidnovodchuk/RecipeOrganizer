@@ -1,7 +1,6 @@
 package com.example.recipesorganizer;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -42,11 +41,13 @@ public class RecipeActivity extends ActionBarActivity {
 		}*/
 	
 		Intent intent = getIntent();
-		/*Bundle bundle = intent.getBundleExtra("recipe");
-		recipe = new Recipe(bundle.getString("title"), bundle.getString("image"), bundle.getString("ingredients"), bundle.getString("instructions"));*/
-		ArrayList<String> result = new ArrayList<String>();
-		result = intent.getStringArrayListExtra("recipe");
-		recipe = new Recipe(result.get(0),result.get(1),result.get(2),result.get(3));
+		Bundle bundle = intent.getBundleExtra("recipe");
+		recipe = new Recipe(bundle.getString("title"), bundle.getString("image"), 
+				bundle.getString("ingredients"), bundle.getString("instructions"));
+		
+		// ArrayList<String> result = new ArrayList<String>();
+		// result = intent.getStringArrayListExtra("recipe");		
+		// recipe = new Recipe(result.get(0),result.get(1),result.get(2),result.get(3));
 		
 		recipeName = (TextView)findViewById(R.id.recipe_name);
 		recipeIngredients = (TextView)findViewById(R.id.recipe_ingredients);

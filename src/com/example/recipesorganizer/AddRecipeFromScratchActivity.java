@@ -10,7 +10,7 @@ import android.widget.EditText;
 public class AddRecipeFromScratchActivity extends Activity {
 
 	private DBAdapter mDbHelper;
-	private Long mRowId;
+	// private Long mRowId;
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -52,8 +52,11 @@ public class AddRecipeFromScratchActivity extends Activity {
 		String ingredients =((EditText) findViewById(R.id.recipe_ingredients)).getText().toString();
 		String instructions =((EditText) findViewById(R.id.recipe_instructions)).getText().toString();
 
+		mDbHelper.createRecipe(title, "", ingredients, instructions);
+		/*
 		long id = mDbHelper.createRecipe(title, "", ingredients, instructions);
 		if (id > 0) 
 			mRowId = id;
+		*/
 	}
 }
