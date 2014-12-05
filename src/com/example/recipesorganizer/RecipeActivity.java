@@ -23,6 +23,7 @@ public class RecipeActivity extends ActionBarActivity {
 	private TextView recipeInstructions;
 	private DBAdapter mDbHelper;
 	private Long mRowId;
+	private Bundle bundle;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class RecipeActivity extends ActionBarActivity {
 		}*/
 	
 		Intent intent = getIntent();
-		Bundle bundle = intent.getBundleExtra("recipe");
+		bundle = intent.getBundleExtra("recipe");
 		recipe = new Recipe(bundle.getString("title"), bundle.getString("image"), 
 				bundle.getString("ingredients"), bundle.getString("instructions"));
 		
@@ -91,7 +92,15 @@ public class RecipeActivity extends ActionBarActivity {
 		}
 		 */
 		if (id == R.id.action_save) {
-			saveState();
+			// saveState();
+			
+			// Using AddRecipeFromScratchActivity for editing existing recipe
+			Intent intent = new Intent("com.example.recipesorganizer.AddRecipeFromScratchActivity");
+			
+			intent.putExtra("recipe", bundle);
+			
+			startActivity( intent );
+			
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

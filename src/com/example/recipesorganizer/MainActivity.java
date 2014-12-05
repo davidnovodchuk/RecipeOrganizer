@@ -98,6 +98,7 @@ public class MainActivity extends ActionBarActivity {
 					recipesCursor = mDbHelper.fetchRecipe(ids.get(position));
 					getRecipe(recipesCursor);
 					Bundle bundle = new Bundle();
+					bundle.putString("rowId", ids.get(position));
 					bundle.putString("title", recipe.title);
 					bundle.putString("image", recipe.imageURL);
 					bundle.putString("ingredients", recipe.ingredients);
@@ -117,7 +118,7 @@ public class MainActivity extends ActionBarActivity {
 
 			RelativeLayout rr = new RelativeLayout(this);
 			TextView tv = new TextView(this);
-			tv.setText("No Recipes in the Database!");
+			tv.setText("No Recipes in the Database!\nPress the plus symbol to add a recipe.");
 			rr.addView(tv);
 
 			setContentView(rr);

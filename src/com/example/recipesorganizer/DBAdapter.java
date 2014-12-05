@@ -200,7 +200,7 @@ public class DBAdapter {
      * @param body value to set note body to
      * @return true if the note was successfully updated, false otherwise
      */
-    public boolean updateRecipe(long rowId, String title, String imageURL, String ingredients, String instructions ) {
+    public boolean updateRecipe(String rowId, String title, String imageURL, String ingredients, String instructions ) {
         ContentValues args = new ContentValues();
         args.put(KEY_TITLE, title);
         args.put(KEY_IMAGE, imageURL);
