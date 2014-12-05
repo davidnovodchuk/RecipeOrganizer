@@ -22,7 +22,7 @@ public class RecipeActivity extends ActionBarActivity {
 	private TextView recipeIngredients;
 	private TextView recipeInstructions;
 	private DBAdapter mDbHelper;
-	private Long mRowId;
+	private int mRowId;
 	private Bundle bundle;
 
 	@Override
@@ -33,18 +33,11 @@ public class RecipeActivity extends ActionBarActivity {
 		mDbHelper = new DBAdapter(this);
         mDbHelper.open();
         
-        /*mRowId = (savedInstanceState == null) ? null :
-            (Long) savedInstanceState.getSerializable(DBAdapter.KEY_ROWID);
-		if (mRowId == null) {
-			Bundle extras = getIntent().getExtras();
-			mRowId = extras != null ? extras.getLong(DBAdapter.KEY_ROWID)
-									: null;
-		}*/
-	
 		Intent intent = getIntent();
 		bundle = intent.getBundleExtra("recipe");
 		recipe = new Recipe(bundle.getString("title"), bundle.getString("image"), 
 				bundle.getString("ingredients"), bundle.getString("instructions"));
+		mRowId = Integer.parseInt(bundle.getString("rowId"));
 		
 		// ArrayList<String> result = new ArrayList<String>();
 		// result = intent.getStringArrayListExtra("recipe");		
@@ -63,20 +56,11 @@ public class RecipeActivity extends ActionBarActivity {
 	}
 	
 	
-	private void saveState() {
-        
-           long id = mDbHelper.createRecipe(recipe.title, recipe.imageURL, recipe.ingredients, recipe.instructions);
-            if (id > 0) 
-                mRowId = id;
-        
-            
-    }
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    // Inflate the menu items for use in the action bar
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.saverecipe, menu);
+	    inflater.inflate(R.menu.recipecontent, menu);
 	    return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -91,7 +75,7 @@ public class RecipeActivity extends ActionBarActivity {
 			return true;
 		}
 		 */
-		if (id == R.id.action_save) {
+		if (id == R.id.action_edit) {
 			// saveState();
 			
 			// Using AddRecipeFromScratchActivity for editing existing recipe
@@ -103,6 +87,13 @@ public class RecipeActivity extends ActionBarActivity {
 			
 			return true;
 		}
+		
+		if (id == R.id.action_discard) {
+			mDbHelper.deleteRecipe(mRowId);
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 	
