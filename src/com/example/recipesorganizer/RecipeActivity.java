@@ -138,6 +138,7 @@ public class RecipeActivity extends ActionBarActivity {
 	    }
 	}
 	
+	//fetch recipe from the cursor into the recipe object
 	public void getRecipe(Cursor c)
 	{
 		recipe.title = c.getString(1);
