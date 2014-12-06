@@ -23,22 +23,20 @@ import android.widget.Toast;
 public class RecipeIntentServiceActivity extends ActionBarActivity {
 
 	private DBAdapter mDbHelper;
-	// private Long mRowId;
+	
 	private IntentFilter intentFilter;
 	private BroadcastReceiver intentReceiver;
 
 	private Recipe recipe;
 
+	// references to screen layout
 	private TextView recipeName;
 	private ImageView recipeImage;
 	private TextView recipeIngredients;
 	private TextView recipeInstructions;
 
-	// private TextView textView;
+	// recipeId for finding recipe in the API
 	private String recipeId;
-	// public static ArrayList<String> titles;
-
-	// ids of recipes provided by the api
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +82,6 @@ public class RecipeIntentServiceActivity extends ActionBarActivity {
 				}
 				catch(Exception ex){ ex.printStackTrace(); }
 
-				Log.d("test", result.get(0));
-
 				recipe = new Recipe(result.get(0),result.get(1),result.get(2),result.get(3));
 
 				recipeName.setText( recipe.title );
@@ -114,11 +110,7 @@ public class RecipeIntentServiceActivity extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		/*
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		 */
+		
 		if (id == R.id.action_save) {
 			saveState();
 			Toast.makeText(getApplicationContext(), "Recipe Was Saved", 
@@ -160,6 +152,8 @@ public class RecipeIntentServiceActivity extends ActionBarActivity {
 		unregisterReceiver( intentReceiver );
 	}
 
+	// loading recipe image from image url
+	// code taken from: http://stackoverflow.com/questions/5776851/load-image-from-url
 	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 		ImageView bmImage;
 

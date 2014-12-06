@@ -26,17 +26,15 @@ import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 	ListView listView ;
-	// private static final int ACTIVITY_CREATE=0;
-	// private static final int ACTIVITY_EDIT=1;
-
-	// private static final int INSERT_ID = Menu.FIRST;
-	// private static final int DELETE_ID = Menu.FIRST + 1;
 
 	private static DBAdapter mDbHelper;
 	private static Recipe recipe;
 	private Cursor recipesCursor;
+	
+	// used to retrieve recipe ids
 	private Cursor idsCursor;
 
+	// ids stores ids of all recipes in the database
 	static ArrayList<String> ids = null;
 
 	@Override
@@ -44,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// connecting to the database
 		mDbHelper = new DBAdapter(this);
 		mDbHelper.open();
 
@@ -52,16 +51,21 @@ public class MainActivity extends ActionBarActivity {
 		listView = (ListView) findViewById(R.id.recipeList);
 
 		getDatabase();
+		// getting titles from the database
 		recipesCursor = mDbHelper.fetchColumn();
+		
+		// getting ids from the database
 		idsCursor = mDbHelper.fetchIdsColumn();
 
 		ArrayList<String> titles = null;
 
+		// checking that there are records in the database
 		if(recipesCursor.moveToFirst())
 		{
 			titles = new ArrayList<String>();
 			ids = new ArrayList<String>();
 
+			// getting all recipe titles and ids
 			while (recipesCursor.moveToNext()) {
 				titles.add(recipesCursor.getString(0));
 				idsCursor.moveToNext();
@@ -69,6 +73,7 @@ public class MainActivity extends ActionBarActivity {
 			}
 		}
 
+		// if recipes database is not empty
 		if( titles != null ) {
 			
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -85,17 +90,12 @@ public class MainActivity extends ActionBarActivity {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 
-					// ListView Clicked item index
-					// int itemPosition     = position;
-
-					// ListView Clicked item value
-					// String  itemValue    = (String) listView.getItemAtPosition(position);
-
 					// Moving to the RecipeActivity and passing selected recipe name
 					Intent intent = new Intent("com.example.recipesorganizer.RecipeActivity");
 
 					recipesCursor = mDbHelper.fetchRecipe(ids.get(position));
 					getRecipe(recipesCursor);
+					// passing recipe data that will be displayed in the view recipe (RecipeActivity)
 					Bundle bundle = new Bundle();
 					bundle.putString("rowId", ids.get(position));
 					bundle.putString("title", recipe.title);
@@ -113,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 		else {
 
-			// presenting message when there are no recipes in the database
+			// presenting appropriate message when there are no recipes in the database
 
 			RelativeLayout rr = new RelativeLayout(this);
 			TextView tv = new TextView(this);
@@ -124,6 +124,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
+	// changing recipe class data from data in Cursor
 	public void getRecipe(Cursor c)
 	{
 		recipe.title = c.getString(1);
@@ -191,11 +192,7 @@ public class MainActivity extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		/*
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		 */
+		
 		if (id == R.id.action_new) {
 			Intent intent = new Intent("com.example.recipesorganizer.ChooseAddOptionActivity");
 			intent.putExtra("recipe_name", "test");

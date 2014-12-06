@@ -75,11 +75,6 @@ public class AddRecipeFromScratchActivity extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		/*
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		 */
 		if (id == R.id.action_save) {
 			if( isAddMode ) {
 				saveState();
@@ -101,6 +96,7 @@ public class AddRecipeFromScratchActivity extends ActionBarActivity {
 						Toast.makeText(getApplicationContext(), "Recipe Was Updated", 
 								   Toast.LENGTH_SHORT).show();
 						
+						// Moving to the MainActivity
 						Intent intent = new Intent(currentActivity, MainActivity.class);
 						startActivity( intent );
 			         }
@@ -119,11 +115,6 @@ public class AddRecipeFromScratchActivity extends ActionBarActivity {
 		String instructions =((EditText) findViewById(R.id.recipe_instructions)).getText().toString();
 
 		mDbHelper.createRecipe(title, "", ingredients, instructions);
-		/*
-		long id = mDbHelper.createRecipe(title, "", ingredients, instructions);
-		if (id > 0) 
-			mRowId = id;
-		*/
 	}
 	
 	private void updateState() {
@@ -133,10 +124,5 @@ public class AddRecipeFromScratchActivity extends ActionBarActivity {
 		String instructions =((EditText) findViewById(R.id.recipe_instructions)).getText().toString();
 
 		mDbHelper.updateRecipe(mRowId, title, recipe.imageURL, ingredients, instructions);
-		/*
-		long id = mDbHelper.createRecipe(title, "", ingredients, instructions);
-		if (id > 0) 
-			mRowId = id;
-		*/
 	}
 }

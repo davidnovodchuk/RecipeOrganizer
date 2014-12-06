@@ -1,5 +1,6 @@
 package com.example.recipesorganizer;
 
+// Recipe class used to organize recipe details
 public class Recipe {
 
 	public String title;

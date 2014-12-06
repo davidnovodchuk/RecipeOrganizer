@@ -20,6 +20,8 @@ public class RecipeSearchIntentServiceActivity extends ListActivity {
 	private BroadcastReceiver intentReceiver;
 
 	private EditText inputView;
+	
+	// titles of search results
 	public static ArrayList<String> titles;
 
 	// ids of recipes provided by the api
@@ -30,6 +32,7 @@ public class RecipeSearchIntentServiceActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe_search_intent_service);
 
+		// input field for user to input search keywords
 		inputView = (EditText) findViewById( R.id.editText1 );
 
 		// create a broadcast receiver

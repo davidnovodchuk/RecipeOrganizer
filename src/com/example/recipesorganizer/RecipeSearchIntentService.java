@@ -15,6 +15,7 @@ import android.util.Log;
 import android.util.Xml;
 
 public class RecipeSearchIntentService extends IntentService {
+	// strings to use in XML parser
 	private final String CLASS_NAME="LittleIntentService";
 	private final String RECIPE_INFO = "RecipeInfo";
 	private final String TITLE = "Title";
@@ -30,8 +31,6 @@ public class RecipeSearchIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent( Intent intent ){
-
-		/* application code here */
 
 		Log.i( CLASS_NAME, "consume web service (xml)..." );
 

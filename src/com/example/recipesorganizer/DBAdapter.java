@@ -139,6 +139,9 @@ public class DBAdapter {
         return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
     }
     
+    /*
+     * Get all recipe titles from the database
+     */
     public Cursor fetchColumn()
     {
     	Cursor mCursor = mDb.query(DATABASE_TABLE, new String [] {KEY_TITLE}, null, null, null, null, null);
@@ -148,6 +151,9 @@ public class DBAdapter {
         return mCursor;
     }
     
+    /*
+     * Get all record ids from the database
+     */
     public Cursor fetchIdsColumn()
     {
     	Cursor mCursor = mDb.query(DATABASE_TABLE, new String [] {KEY_ROWID}, null, null, null, null, null);

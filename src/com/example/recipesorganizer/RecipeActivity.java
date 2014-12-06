@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+// view recipe
 public class RecipeActivity extends ActionBarActivity {
 	private Recipe recipe;
 	private TextView recipeName;
@@ -40,20 +41,18 @@ public class RecipeActivity extends ActionBarActivity {
 		mDbHelper = new DBAdapter(this);
         mDbHelper.open();
         
+        // getting recipe info to present on the screen
 		Intent intent = getIntent();
 		bundle = intent.getBundleExtra("recipe");
 		recipe = new Recipe(bundle.getString("title"), bundle.getString("image"), 
 				bundle.getString("ingredients"), bundle.getString("instructions"));
 		mRowId = Integer.parseInt(bundle.getString("rowId"));
 		
-		// ArrayList<String> result = new ArrayList<String>();
-		// result = intent.getStringArrayListExtra("recipe");		
-		// recipe = new Recipe(result.get(0),result.get(1),result.get(2),result.get(3));
-		
 		recipeName = (TextView)findViewById(R.id.recipe_name);
 		recipeIngredients = (TextView)findViewById(R.id.recipe_ingredients);
 		recipeInstructions = (TextView)findViewById(R.id.recipe_instructions);
 		
+		// presenting recipe on the screen
 		recipeName.setText(recipe.title);
 		recipeIngredients.setText(recipe.ingredients);
 		recipeInstructions.setText(recipe.instructions);
@@ -77,13 +76,8 @@ public class RecipeActivity extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		/*
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		 */
+		
 		if (id == R.id.action_edit) {
-			// saveState();
 			
 			// Using AddRecipeFromScratchActivity for editing existing recipe
 			Intent intent = new Intent("com.example.recipesorganizer.AddRecipeFromScratchActivity");
@@ -97,7 +91,7 @@ public class RecipeActivity extends ActionBarActivity {
 		
 		if (id == R.id.action_discard) {
 			// confirmation that user wants to delete recipe:
-			// http://stackoverflow.com/questions/19286135/android-alert-dialog-and-set-positive-button
+			// taken from: http://stackoverflow.com/questions/19286135/android-alert-dialog-and-set-positive-button
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 		    builder.setTitle("Deletion Confirmation");
@@ -117,6 +111,8 @@ public class RecipeActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	// loading recipe image from image url
+	// code taken from: http://stackoverflow.com/questions/5776851/load-image-from-url
 	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 	    ImageView bmImage;
 
