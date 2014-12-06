@@ -1,5 +1,6 @@
 package com.example.recipesorganizer;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -57,8 +58,12 @@ public class AddRecipeFromScratchActivity extends ActionBarActivity {
 		
 		if( recipe == null )
 			isAddMode = true;
-		else
+		else{
 			isAddMode = false;
+			// changing the title of the action bar
+			ActionBar actionBar = getActionBar();
+			actionBar.setTitle("Edit Recipe");
+		}
 	}
 
 	@Override
